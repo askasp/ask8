@@ -16,6 +16,6 @@ spec:
     http: &http_rule
       paths:
       - backend:
-          serviceName: jaa_api
+          serviceName: jaa-api
           servicePort: 80
 
