@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - dev-jaa.do.stadler.no
+    - dev-abbo.stadler.no
     secretName: dev-jaa-tls-acme
   rules:
-  - host: dev-jaa.do.stadler.no
+  - host: dev-abbo.stadler.no
     http: &http_rule
       paths:
       - backend:
