@@ -1,6 +1,6 @@
 # Simpk8s- the poor mans alternative
 
-Simpk8s runs on a single droplet on digital ocean. 
+It runs on a single digital ocean droplet.
 Meaning that it costs the same as a VM.
 This gives significantly more bang for the buck as you
 do not need a load balancer, something that is required for 
@@ -21,7 +21,10 @@ managed k8s.
 ### Namespaces
 We have one namespace for dev and one for production so 
 we can run both in the same cluster
-![](https://i.imgur.com/GmlvwmI.jpeg)
+
+<img src="https://i.imgur.com/GmlvwmI.jpeg" alt="drawing" width="400"/>
+
+Change between them 
 
     kubectl config use-context dev
     kubectl config use-context prod
@@ -47,7 +50,6 @@ In this repo:
 Add a deployment, and service + ingress if wanted.
 Deploy that manually (one time thing). 
 
-
 In app repo:
 Add a github action
 that pushes to docker hub, ssh in to the droplet and runs
@@ -57,6 +59,11 @@ For example
 
 https://github.com/askasp/jaa_api_live/blob/main/.github/workflows/main.yml
 
+
+## TODO
+1. Make a persistent storage claim and volume
+2. Add eventstore helm chart
+3. Add Redis for read models (Need to switch to something else if we run out of memory) 
 
 ## How to set it up (for future reference)
 
@@ -80,7 +87,6 @@ Then use kubectl as normal
 ### Namespaces
 We have one namespace for dev and one for production so 
 we can run both in the same cluster
-![](https://i.imgur.com/GmlvwmI.jpeg)
 
 To set up run
             kubectl create -f  namespace-prod.json
