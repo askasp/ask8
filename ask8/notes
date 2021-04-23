@@ -1,0 +1,27 @@
+
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm
+https://kubernetes.io/docs/tasks/administer-cluster/namespaces-walkthrough/
+https://engineering.dollarshaveclub.com/elixir-otp-applications-on-kubernetes-9944636b8609
+
+https://octopus.com/blog/introduction-to-tekton-pipelines
+1. namespace is cluster, context is local
+
+kubectl get namespaces
+kubectl config view
+kubectl config use-context
+
+
+
+microk8s enable helm3 ingress
+Install cert-manager and specify Let's Encrypt issuer (will be created later) as default for Ingress resources:
+
+microk8s kubectl create namespace cert-manager
+microk8s helm3 repo add jetstack https://charts.jetstack.io
+microk8s helm3 repo update
+microk8s helm3 install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --version v0.15.2 \
+  --set installCRDs=true \
+  --set ingressShim.defaultIssuerName=letsencrypt-production \
+  --set ingressShim.defaultIssuerKind=ClusterIssuer \
+  --set ingressShim.defaultIssuerGroup=cert-manager.io

@@ -1,22 +1,44 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: dev-ask8-ingress
+  name: dev-ingress
   namespace: development
   annotations:
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: "public"
+    # ingress.kubernetes.io/rewrite-target: /
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod" # "letsencrypt-prod"
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/tls-acme: "true"
+
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # kubernetes.io/tls-acme: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   tls:
   - hosts:
     - dev-abbo.stadler.no
-    secretName: dev-jaa-tls-acme
+    - abbo.stadler.no
+    secretName: abbo-tls-secret-2
   rules:
   - host: dev-abbo.stadler.no
-    http: &http_rule
+    http:
       paths:
-      - backend:
+      - path: /
+        backend:
+          serviceName: nginx-deployment
+          servicePort: 80
+      - path: /hei
+        backend:
+          serviceName: jaa-api
+          servicePort: 80
+  - host: abbo.stadler.no
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-deployment
+          servicePort: 80
+      - path: /hei
+        backend:
           serviceName: jaa-api
           servicePort: 80
 
