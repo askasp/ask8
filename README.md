@@ -10,12 +10,11 @@ managed k8s.
 ## How to use
 ### Connecting 
     1. Send ssh pub key to aksel
-    2. Copy ~/.kube/config from remote to local
-        ~/.kube/config
+    2. Copy ~/.kube/config from remote to local ~/.kube/config
     3. Open a tunnel with ssh -N -L localhost:16443:localhost:16443 root@167.99.218.91
     4. Use kubectl as normal from your terminal
     
-    might need this (I didnt)
+    might need this (I didn't)
     sed -ie "s/127.0.0.1/$SERVERIP/g" ~/.kube/config
     
 ### Namespaces
@@ -24,7 +23,7 @@ we can run both in the same cluster
 
 <img src="https://i.imgur.com/GmlvwmI.jpeg" alt="drawing" width="400"/>
 
-Change between them 
+Change between them by
 
     kubectl config use-context dev
     kubectl config use-context prod
@@ -43,22 +42,63 @@ Will put this behind an admin login when we have it
     https://dev-abbo.stadler.no/dashboard
     
 
-
 ### SimpCI with github action
 
 In this repo:
-Add a deployment, and service + ingress if wanted.
-Deploy that manually (one time thing). 
+Add a deployment, (and service + ingress).
+Deploy that manually with kubectl create -f filename
 
 In app repo:
-Add a github action
-that pushes to docker hub, ssh in to the droplet and runs
-     microk8s kubectl rollout restart deployment (name)
-     
+Add a github action that does the following
+1. Builds a docker image
+2. Pushes to a registry
+3. SSH into our droplet
+4. microk8s kubectl rollout restart deployment name    
 For example 
 
 https://github.com/askasp/jaa_api_live/blob/main/.github/workflows/main.yml
 
+
+
+### Secret management
+Create a secret with 
+                
+    kubectl create secret generic abbo-secret-key-base --from-literal=ABBO_SECRET_KEY_BASE={secret value}
+
+Use it in the deployment as 
+    
+       containers:
+      - name: abbo
+        image: askask123/abbo:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: SECRET_KEY_BASE
+          valueFrom:
+           secretKeyRef:
+            name: abbo-secret-key-base
+            key: ABBO_SECRET_KEY_BASE   <--- this guy right here
+
+
+
+
+### Config management
+
+    kubectl config use-context (env)
+    kubectl create -f (env)-configmap.yamj
+
+Then add read them into the container as this
+    
+    containers:
+    - name: env-var-configmap
+      image: nginx:1.7.9 
+      envFrom:
+        - configMapRef:
+            name: example-configmap
+
+
+Note that configs and secrets must have the same name in prod and env. The exist in each namespace seperatley and can only be loaded by another pod in the same namespaces. 
+Low risk of machine error, very high risk of human error. (Just forgetting to type kubectl config set-context (env)
 
 ## TODO
 1. Make a persistent storage claim and volume
