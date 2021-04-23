@@ -1,0 +1,41 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: abbo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: abbo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abbo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: abbo
+  template:
+    metadata:
+      labels:
+        app: abbo
+    spec:
+      containers:
+      - name: abbo
+        image: askask123/abbo:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: SECRET_KEY_BASE
+          valueFrom:
+           secretKeyRef:
+            name: abbo-secret-key-base
+            key: ABBO_SECRET_KEY_BASE
+      imagePullSecrets:
+      - name: regcred
+ 

@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dev-ingress
+  namespace: development
+  annotations:
+    kubernetes.io/ingress.class: "public"
+    # ingress.kubernetes.io/rewrite-target: /
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod" # "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # kubernetes.io/tls-acme: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+  - hosts:
+    - dev-abbo.stadler.no
+    - abbo.stadler.no
+    secretName: abbo-tls-secret-2
+  rules:
+  - host: dev-abbo.stadler.no
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: abbo
+          servicePort: 80
+  - host: abbo.stadler.no
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-deployment
+          servicePort: 80
+
