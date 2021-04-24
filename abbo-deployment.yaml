@@ -10,6 +10,19 @@ spec:
     targetPort: 5000
   selector:
     app: abbo
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: abbo-nodes-headless
+spec:
+  clusterIP: None
+  selector:
+    app: abbo
+  ports:
+    - name: epmd
+      port: 4369
+
 ---
 apiVersion: apps/v1
 kind: Deployment

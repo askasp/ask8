@@ -163,5 +163,15 @@ as letsencrypt bans you for 24h if you ask for a cert to many times
 
 ### Expose dashboard on internet
     kubectl create -f ingress-kubesystem.yaml
+    
+    
+### Eventstore
+Install with helm 
+        microk8s helm3 install -n eventstore eventstore/eventstore --set persistence.enabled=true --set clusterSize=1
+        microk8s helm install -n eventstore eventstore/eventstore --set persistence.enabled=true 
+        
+Remove  IP_Adressable from stateful set as this prevents login
+Login to admin panel with
 
+    kubectl port-forward svc/eventstore 2113
 

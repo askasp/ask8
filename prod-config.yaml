@@ -1,0 +1,14 @@
+
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: configmap
+data:
+  # Configuration values can be set as key-value properties
+  database: mongodb-prod
+  database_uri: mongodb://localhost:27017-butprod
+  
+  # Or set as complete file contents (even JSON!)
+  keys: | 
+    image.public.key=771 
+    rsa.public.key=42

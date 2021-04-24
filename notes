@@ -12,6 +12,8 @@ kubectl config view
 kubectl config use-context
 
 
+tcp://eventstore.development.svc.cluster.local:1113
+tcp://eventstore.development.svc.cluster.local:1113
 pulling from private repo 
 https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 
