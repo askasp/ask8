@@ -5,9 +5,9 @@ metadata:
   name: configmap
 data:
   # Configuration values can be set as key-value properties
-  database: mongodb
-  database_uri: mongodb://localhost:27017
-  
+  redis_master: redis-master.development.svc.cluster.local
+  redis_replicas: redis-replicas.development.svc.cluster.local
+  eventstore: 10.0.1.1
   # Or set as complete file contents (even JSON!)
   keys: | 
     image.public.key=771 

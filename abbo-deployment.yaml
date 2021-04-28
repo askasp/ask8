@@ -12,12 +12,27 @@ spec:
     app: abbo
 
 ---
+
+kind: Service
+apiVersion: v1
+
+metadata:
+  name: abbo-nodes-headless
+spec:
+  clusterIP: None
+  selector:
+    app: abbo
+  ports:
+    - name: epmd
+      port: 4369
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: abbo
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: abbo
@@ -37,10 +52,26 @@ spec:
            secretKeyRef:
             name: abbo-secret-key-base
             key: ABBO_SECRET_KEY_BASE
+        - name: REDIS_MASTER
+          valueFrom:
+            configMapKeyRef:
+                name: configmap
+                key: redis_master
+        - name: REDIS_REPLICAS
+          valueFrom:
+            configMapKeyRef:
+                name: configmap
+                key: redis_replicas
+        - name: EVENTSTORE
+          valueFrom:
+            configMapKeyRef:
+                name: configmap
+                key: eventstore
         - name: MY_POD_IP
           valueFrom:
             fieldRef:
                 fieldPath: status.podIP
+
       imagePullSecrets:
       - name: regcred
  
